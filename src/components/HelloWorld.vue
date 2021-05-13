@@ -10,6 +10,24 @@
     <button @click="calculate('div')">/</button>
     <button @click="calculate('pow')">^</button>
     <button @click="calculate('div2')">%</button>
+
+    <br>
+    <input type="checkbox"  v-model="showKeyboard"> Показать клавиатуру
+    <div v-if="showKeyboard">
+      <button v-for="num in 10"
+              :key="num-1"
+              @click="insertNumber(num - 1)">
+        {{ num - 1 }}
+      </button>
+      <button @click="clear">
+        Clear
+      </button>
+      <br>
+      <input type="radio" id="one" value="1" v-model="picked">
+      <label for="one">Операнд 1</label>
+      <input type="radio" id="two" value="2" v-model="picked">
+      <label for="two">Операнд 2</label>
+    </div>
   </div>
 </template>
 
@@ -19,7 +37,9 @@ export default {
   data: () => ({
     operand1: 0,
     operand2: 0,
-    result: 0
+    result: 0,
+    showKeyboard: true,
+    picked: '1'
   }),
   props: {
   },
@@ -44,6 +64,16 @@ export default {
         case 'pow':
           this.result = this.operand1 ** this.operand2
           break
+      }
+    },
+    insertNumber (num) {
+      this.picked === '1' ? this.operand1 = this.operand1 * 10 + num : this.operand2 = this.operand2 * 10 + num
+    },
+    clear () {
+      if (this.picked === '1') {
+        this.operand1 = (this.operand1 - this.operand1 % 10) / 10
+      } else {
+        this.operand2 = (this.operand2 - this.operand2 % 10) / 10
       }
     }
   }
